@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script async src="https://cdn.rawgit.com/eligrey/FileSaver.js/5ed507ef8aa53d8ecfea96d96bc7214cd2476fd2/FileSaver.min.js"></script>
+<script async src="https://cdn.rawgit.com/eligrey/Blob.js/master/Blob.js"></script>
+<style>
+body {
+    margin: 0;
+    background-color: #ECE9D8;
+    font-family: "Tahoma";
+    src: url(https://github.com/Azeonus/azeonus.github.io/blob/kart-encore/tahoma.ttf?raw=true);
+    font-smooth: never;
+    -webkit-font-smoothing : none;
+}
+
+p,span {font-size: 14px;}
+p,span,h1,h2,h3 {white-space: nowrap; text-align: center;}
+h1,h2,h3 {margin-top: 5px;}
+
+.content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-style: outset;
+  padding: 20px 20px;
+  border-top-color: #fffff4;
+  border-left-color: #fffff4;
+  border-bottom-color: #a6a190;
+  border-right-color: #a6a190;
+}
+
+.fileInput {
+    margin: 0 20%;
+    font-family: "Tahoma";
+}
+
+.code {
+	margin: 8px;
+    padding: 4px;
+    font-family: Consolas;
+    font-size: 16px;
+    background-color: white;
+    border: 1px solid #7F9DB9;
+    border-color: #7F9DB9;
+}
+
+</style>
+</head>
+<body>
+
+<div class="content">
+    <h2>SRB2Kart Encore LumpGen</h2>
+    <p>Remap your textures/flats to their Encore equivalents.
+    <br>
+    using the Colour Remap tool, then click Save to File.</p>
+    <p style="margin-bottom: 4px;">Upload those files here.<br>
+    The Encore lump will then be auto downloaded as:
+    </p>
+    <p class="code">ENCOREPAL.lmp</p>
+    <input type="file" name="file" class="fileInput" multiple />
+</div>
+
+<script>
+
+</script>
+
+</body>
+</html>
