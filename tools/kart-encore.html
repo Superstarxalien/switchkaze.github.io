@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script async src="https://cdn.rawgit.com/eligrey/FileSaver.js/5ed507ef8aa53d8ecfea96d96bc7214cd2476fd2/FileSaver.min.js"></script>
+<script async src="https://cdn.rawgit.com/eligrey/Blob.js/master/Blob.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<style>
+body {
+    margin: 0;
+    background-color: #ECE9D8;
+    font-family: "Tahoma";
+    src: url(https://github.com/Azeonus/azeonus.github.io/blob/master/fonts/tahoma.ttf?raw=true);
+    font-smooth: never;
+    -webkit-font-smoothing : none;
+}
+
+p,span {font-size: 14px;}
+p,span,h1,h2,h3 {white-space: nowrap; text-align: center;}
+h1,h2,h3 {margin-top: 5px;}
+
+.content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-style: outset;
+  padding: 20px 20px;
+  border-top-color: #fffff4;
+  border-left-color: #fffff4;
+  border-bottom-color: #a6a190;
+  border-right-color: #a6a190;
+}
+
+.fileInput {
+    margin: 0 20%;
+    font-family: "Tahoma";
+}
+
+.code {
+	margin: 8px;
+    padding: 4px;
+    font-family: Consolas;
+    font-size: 16px;
+    background-color: white;
+    border: 1px solid #7F9DB9;
+    border-color: #7F9DB9;
+}
+
+</style>
+</head>
+<body>
+
+<div class="content">
+    <h2>SRB2Kart Encore LumpGen</h2>
+    <p>First, remap your textures/flats to their
+    <br>
+    Encore equivalents using SLADE's
+    <br>
+    Colour Remap tool, then click Save to File
+    <br>
+    at the bottom of the Color Remap dialog box.
+    </p>
+    <p style="margin-bottom: 4px;">Upload those files here.<br>
+    The Encore lump will then be auto downloaded as:
+    </p>
+    <p class="code">ENCOREPAL.lmp</p>
+    <p>Import it onto SLADE and place it after your map.
+    <br>
+    Rename it to MAP**E, where ** is the map number.</p>
+    <input type="file" name="file" class="fileInput" id="fileInput" accept='text/plain' multiple />
+</div>
+
+<script>
+var palette = [];
+for (var i=0;i<256;i++)
+	palette[i]=i;
+
+function parseFile(text){
+	text = text.replace(',','');						//"0:4=218:220" "106:106=154:154"
+	var remaps = text.split(' ');						//["0:4=218:220", "106:106=154:154"]
+	for (var rnum=0; rnum<remaps.length; rnum++){
+		var remap = remaps[rnum];						//"0:4=218:220"
+		remap = remap.replace('"','');					//0:4=218:220
+		
+		var sects = remap.split('=');					//[0:4, 218:220]
+		
+		var src = sects[0].split(':');		//[0, 4]
+		var srcstart = parseInt(src[0]);	//0	
+		var srcend = parseInt(src[1]);		//4
+		
+		var dest = sects[1].split(':');		//[218, 220]
+		var deststart = parseInt(dest[0]);	//218
+		var destend = parseInt(dest[1]);	//220
+		
+		var srcrange = srcend-srcstart;		//4-0 =		4
+		var destrange = destend-deststart;	//220-218 =	2
+		
+		for (var destnum=0; destnum<=destrange; destnum++){
+			var alpha = destrange==0 ? 0 : destnum/destrange;
+			palette[deststart+destnum] = srcstart + srcrange*alpha;
+		}
+	}
+}
+
+function downloadPalette(){
+	var blob = new Blob([String.fromCharCode.apply(null,palette)], {type: "application/octet-stream"});
+	saveAs(blob, "ENCOREPAL.lmp");
+}
+
+document.getElementById('fileInput').addEventListener('change', function(){
+	if (this.files) {
+		$.each(this.files, function(i,file) {
+			var reader = new FileReader();
+			
+			reader.onload = function(e) {
+				var text = reader.result;
+				parseFile(text);
+			}
+			
+			reader.readAsText(file);
+		})
+		downloadPalette();
+	}
+})
+</script>
+
+</body>
+</html>
